@@ -8,28 +8,21 @@ using namespace biji;
 
 wallet_gui::wallet_gui()
 {
- //   title.brush.set_background(Color::Blue);
     title.brush.set_foreground(Color::Blue);
-    title.set_alignment(Alignment::Center);  
     title.height_policy.fixed(1);
-    //title.border.enable(); 
 
-    //send_button.brush.set_background(Color::Blue);
     send_button.brush.set_foreground(Color::Blue);
     send_button.height_policy.fixed(3);
     send_button.border.enable();
 
-    //receive_button.brush.set_background(Color::Blue);
     receive_button.brush.set_foreground(Color::Blue);
     receive_button.height_policy.fixed(3);
     receive_button.border.enable();
 
-    //balance_button.brush.set_background(Color::Blue);
     balance_button.brush.set_foreground(Color::Blue);
     balance_button.height_policy.fixed(3);
     balance_button.border.enable();
 
-    //history_button.brush.set_background(Color::Blue);
     history_button.brush.set_foreground(Color::Blue);
     history_button.height_policy.fixed(3);    
     history_button.border.enable();
@@ -42,7 +35,6 @@ wallet_gui::wallet_gui()
     // defines pages
 
     pages_stack.set_active_page(0);
-//    pages_stack.height_policy.fixed(10);
     pages_stack.give_focus_on_change(true);
 
     send_button.clicked.connect(slot::set_active_page(pages_stack, 1));

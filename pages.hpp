@@ -14,10 +14,7 @@ class send_page
 public:
     send_page();
 
-    Send_widget& send_function
-    {
-        make_child<Send_widget>()
-    };    
+    Send_widget& send_function{make_child<Send_widget>()};    
 };
 
 class receive_page
@@ -62,9 +59,11 @@ class landing_page
 public:
     landing_page();
 
+    // would be great to put financial data here
+
     Text_display& text
     {
-        make_child<Text_display>("WELCOME TO THE WALLET")
+        make_child<Text_display>()
     };
 };
 

@@ -8,8 +8,12 @@
 #include <biji.hpp>   
 #include <spdlog/spdlog.h>
 
+#include "boxes.hpp"
+
 using namespace cppurses;
 using namespace biji;
+
+// tab up and down through stack
 
 class popup_page;
 class Send_widget
@@ -19,13 +23,13 @@ public:
 
     Send_widget();
 
-    layout::Vertical& fields{make_child<layout::Vertical>()}; 
+    layout::Vertical& fields{make_child<layout::Vertical>()};
 
-    Line_edit& enter_address{fields.make_child<Line_edit>("Enter address")};
+    address_box& enter_address{fields.make_child<address_box>()};
 
-    Line_edit& enter_amount{fields.make_child<Line_edit>("Enter amount")};   
+    amount_box& enter_amount{fields.make_child<amount_box>()};
 
-    Line_edit& enter_fee{fields.make_child<Line_edit>("Enter fee")};   
+    fee_box& enter_fee{fields.make_child<fee_box>()};
 
     Push_button& enter_button{fields.make_child<Push_button>("SEND")};    
 
@@ -48,6 +52,8 @@ public:
     
     Text_display& text_echo{left_side.make_child<Text_display>("You entered:")};
 
+    //Textbox& input_echo
+
     Text_display& address_echo{left_side.make_child<Text_display>()};
 
     Text_display& fee_echo{left_side.make_child<Text_display>()};
@@ -61,7 +67,6 @@ public:
     Widget& empty_space{right_side.make_child<Widget>()};
 
     layout::Horizontal& buttons{right_side.make_child<layout::Horizontal>()};
-
 
     Push_button& yes_button{buttons.make_child<Push_button>("YES")};
 

@@ -13,7 +13,7 @@ class wallet_gui
 public:
     wallet_gui();
 
-    Text_display& title{make_child<Text_display>
+    Push_button& title{make_child<Push_button>
         ("D A R K  R E N A I S S A N C E  W A L L E T")};    
 
     layout::Horizontal& buttons{make_child<layout::Horizontal>()};
