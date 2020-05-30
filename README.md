@@ -1,10 +1,10 @@
-% Dark renaissance wallet
+# Dark renaissance wallet
 
-# Description
+## Description
 
 This is a toy bitcoin wallet that I am building to learn more about TUI design and to put my beginner C++ skills into practice.
 
-# TO-DO
+## TO-DO
 
 * Make new popup page that errors if address/fee/amount input fail checks
 * Implement checks
