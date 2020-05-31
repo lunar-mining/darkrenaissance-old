@@ -17,7 +17,7 @@ send_page::send_page()
 
 receive_page::receive_page()
 {
-    text.set_alignment(Alignment::Right);
+    text.set_alignment(Alignment::Center);
 }
 
 balance_page::balance_page()

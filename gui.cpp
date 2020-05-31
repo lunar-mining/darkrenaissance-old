@@ -10,10 +10,11 @@ wallet_gui::wallet_gui()
 {
     border.enable();
 
+    brush.set_foreground(Color::Blue);
+
     title.brush.set_foreground(Color::Blue);
     title.height_policy.preferred(3);
     title.border.enable(); 
-    title.width_policy.preferred(40);
 
     focus_policy = Focus_policy::Direct;
 

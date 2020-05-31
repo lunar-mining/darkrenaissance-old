@@ -18,7 +18,7 @@ public:
     Push_button& title{make_child<Push_button>
         ("D A R K  R E N A I S S A N C E  W A L L E T" )};    
 
-    Menu_stack& wallet_menu{make_child<Menu_stack>(" ")};
+    dark_menu_stack& wallet_menu{make_child<dark_menu_stack>()};
 
     send_page& send{wallet_menu.make_page<send_page>("SEND")};
 
