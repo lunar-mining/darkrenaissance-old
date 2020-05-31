@@ -8,67 +8,16 @@ using namespace biji;
 
 wallet_gui::wallet_gui()
 {
+    border.enable();
+
     title.brush.set_foreground(Color::Blue);
-    title.height_policy.fixed(1);
+    title.height_policy.preferred(3);
+    title.border.enable(); 
+    title.width_policy.preferred(40);
 
-    send_button.brush.set_foreground(Color::Blue);
-    send_button.height_policy.fixed(3);
-    send_button.border.enable();
+    focus_policy = Focus_policy::Direct;
 
-    receive_button.brush.set_foreground(Color::Blue);
-    receive_button.height_policy.fixed(3);
-    receive_button.border.enable();
-
-    balance_button.brush.set_foreground(Color::Blue);
-    balance_button.height_policy.fixed(3);
-    balance_button.border.enable();
-
-    history_button.brush.set_foreground(Color::Blue);
-    history_button.height_policy.fixed(3);    
-    history_button.border.enable();
-
-    focus_policy = Focus_policy::Tab;
-//    enable_tab_focus();
-    Focus::set_focus_to(*this);
-   // set_selected_attribute(Attribute::Inverse);
-
-    // defines pages
-
-    pages_stack.set_active_page(0);
-    pages_stack.give_focus_on_change(true);
-
-    send_button.clicked.connect(slot::set_active_page(pages_stack, 1));
-    receive_button.clicked.connect(slot::set_active_page(pages_stack, 2));
-    balance_button.clicked.connect(slot::set_active_page(pages_stack, 3));
-    history_button.clicked.connect(slot::set_active_page(pages_stack, 4));
+    auto& esc_short = Shortcuts::add_shortcut(Key::Escape);
+    esc_short.connect([this] { wallet_menu.goto_menu(); });
 }
 
-bool wallet_gui::key_press_event(const Key::State& keyboard)
-{  
-    if (keyboard.key == Key::Arrow_down || keyboard.key == Key::j) {slot::set_active_page(pages_stack, 1);
-    } else if (keyboard.key == Key::Arrow_up || keyboard.key == Key::k) {slot::set_active_page(pages_stack, 1);
-    } else if (keyboard.key == Key::Enter) {slot::set_active_page(pages_stack, 1)();
-    }
-    return true; 
-}   /*
-
-bool Menu::mouse_press_event(const Mouse::State& mouse) {
-    if (mouse.button == Mouse::Button::ScrollUp) {
-        this->select_up();
-    } else if (mouse.button == Mouse::Button::ScrollDown) {
-        this->select_down();
-    }
-    return layout::Vertical::mouse_press_event(mouse);
-}
-
-bool Menu::mouse_press_event_filter(Widget&  receiver ,
-                                    const Mouse::State& mouse) {
-    if (mouse.button == Mouse::Button::ScrollUp) {
-        this->select_up();
-        return true;
-    } else if (mouse.button == Mouse::Button::ScrollDown) {
-        this->select_down();
-        return true;
-    }
-    return false;  
-}                 */                 

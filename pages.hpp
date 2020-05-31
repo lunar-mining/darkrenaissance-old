@@ -8,6 +8,20 @@
 using namespace cppurses;
 using namespace biji;
 
+class landing_page
+  : public layout::Horizontal
+{
+public:
+    landing_page();
+
+    // would be great to put financial data here
+
+    Text_display& text
+    {
+        make_child<Text_display>()
+    };
+};  
+
 class send_page
   : public layout::Horizontal
 {
@@ -53,18 +67,6 @@ public:
     };
 }; 
 
-class landing_page
-  : public layout::Horizontal
-{
-public:
-    landing_page();
 
-    // would be great to put financial data here
-
-    Text_display& text
-    {
-        make_child<Text_display>()
-    };
-};
 
 #endif // DARK_PAGES_HPP
