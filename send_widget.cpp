@@ -2,13 +2,13 @@
 #include <iostream>
 #include <signals/signal.hpp>
 #include <cppurses/cppurses.hpp>
-#include <biji.hpp>   
+//#include <biji.hpp>   
 #include <spdlog/spdlog.h>
 
 #include "send_widget.hpp"
 
 using namespace cppurses;
-using namespace biji;
+//using namespace biji;
 
 namespace {
 const std::size_t front_page{0};
@@ -19,113 +19,92 @@ const std::size_t confirm_page{1};
 // ENTER press for send
 // inverse attributes on focus
 
-Send_widget::Send_widget()
+Send_stack::Send_stack()
   : popup{make_page<popup_page>(*this)}
 {
-    give_focus_on_change(true);
-    focus_policy = Focus_policy::Strong;
+    send_menu.focus_policy = Focus_policy::Direct;
+    send_menu.set_name("send_menu");
 
+    enter_address.set_name("address box");
+    enter_address.focus_policy = Focus_policy::Direct;
+
+    enter_amount.set_name("amount box");
+    enter_amount.focus_policy = Focus_policy::Direct;
+
+    enter_fee.set_name("fee box");
+    enter_fee.focus_policy = Focus_policy::Direct;
+
+    enter_button.set_name("button box");
+    enter_button.focus_policy = Focus_policy::Direct;
+
+    set_active_page(front_page);
+    set_name("send stack");
+
+    give_focus_on_change(true);
+    
+    if (Focus::focus_widget())
+        spdlog::debug("hhh focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("hhh none");
+ 
     enter_button.brush.set_background(Color::Black);
     enter_button.brush.set_foreground(Color::Blue);  
     enter_button.border.enable();
     enter_button.height_policy.expanding(3);
-
- //   bool key_press_event();
-    //slot::set_attribute(enter_button, Attribute::Inverse);
-    set_active_page(front_page);
-
+    
     enter_button.clicked.connect(
     [this]
     {
+    if (Focus::focus_widget())
+        spdlog::debug("focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("none");
         set_active_page(confirm_page);
         popup.execute();
     });
-    
-    /*const Key::State& keyboard;
-    if (keyboard.key == Key::Enter)
-    {
-        set_active_page(confirm_page);
-        popup.execute();
-    }*/
-/*    const Key::State& keyboard;
-    if (keyboard.key == Key::Arrow_down || keyboard.key == Key::j) {
-        this->select_down();
-    } else if (keyboard.key == Key::Arrow_up || keyboard.key == Key::k) {
-        this->select_up();
-    } else if (keyboard.key == Key::Enter) {
-        this->send_selected_signal();
-    }
-    return true; */  
 };                                     
 
-
-
-popup_page::popup_page(Send_widget& send)
+popup_page::popup_page(Send_stack& send)
   : send_w(send)
 {
-//    height_policy.expanding(9);
-    width_policy.expanding(35);
+    set_name("popup page");
+    focus_policy = Focus_policy::Direct;
 
-    text_echo.set_alignment(Alignment::Center);
-    text_echo.brush.set_foreground(Color::Blue);
-    text_echo.height_policy.expanding(1);
+   // input_echo.border.enable();
+  //  input_echo.set_alignment(Alignment::Center);
 
-    text_confirm.set_alignment(Alignment::Center);
-    text_confirm.brush.set_foreground(Color::Blue);
-    text_confirm.height_policy.expanding(3);
+    input_echo.height_policy.expanding(7);
 
-    address_echo.set_alignment(Alignment::Center);
-    address_echo.brush.set_foreground(Color::Blue);
-    address_echo.height_policy.expanding(2);
+    input_echo.width_policy.expanding(35);
 
-    fee_echo.set_alignment(Alignment::Center);
-    fee_echo.brush.set_foreground(Color::Blue);
-    fee_echo.height_policy.expanding(2);
+ //   no_button.clicked.connect(
+ //   [this]()
+ //   {
+ //  //   wallet_menu.goto_menu;
+ //   });
 
-    amount_echo.set_alignment(Alignment::Center);
-    amount_echo.brush.set_foreground(Color::Blue);
-    //amount_echo.border.enable();
-    //amount_echo.height_policy.expanding(2);
+ //   no_button.border.enable();
+ //   no_button.height_policy.expanding(4);
 
-  //  empty_space.height_policy.expanding(3);
-
-    no_button.clicked.connect(
-    [this]()
-    {
-//    this->Stack::set_active_page(confirm_page);
-    });
-
-    no_button.border.enable();
-    no_button.height_policy.expanding(4);
-
-    yes_button.clicked.connect(
-    [this]()
-    {
-        build_transaction();
-        broadcast();
-    });
-     
-    yes_button.border.enable();
-    yes_button.height_policy.expanding(4);
-
-
-//    auto& esc_short = Shortcuts::add_shortcut(Key::Escape);
-//   esc_short.connect([this] { main_menu.goto_menu(); });
+ //   yes_button.clicked.connect(
+ //   [this]()
+ //   {
+ //      // build_transaction();
+ //       //broadcast();
+ //   });
+ //    
+ //   yes_button.border.enable();
+ //   yes_button.height_policy.expanding(4);
 }
 
 void popup_page::execute()
 {
-    spdlog::debug("popup_page::echo_input: Name is: {}",
-        send_w.enter_address.address_input.contents().str());
+    Glyph_string input_data = "You entered:" +
+        send_w.enter_address.address_input.contents().str() +
+        send_w.enter_fee.fee_input.contents().str() +
+        send_w.enter_amount.amount_input.contents().str();
 
-    address_echo.set_contents(send_w.enter_address.address_input.contents().str());
-    
-    fee_echo.set_contents(send_w.enter_fee.fee_input.contents().str());
-
-    amount_echo.set_contents(send_w.enter_amount.amount_input.contents().str());
-
-    // repeat for all fields
-    std::cout << "Address: {}" << send_w.enter_address.address_input.contents().str() << std::endl; 
+    input_echo.set_contents(input_data);
 }
 
 void popup_page::build_transaction()
@@ -137,3 +116,4 @@ void popup_page::broadcast()
 {
     // broadcasts
 }
+

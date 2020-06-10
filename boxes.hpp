@@ -2,10 +2,10 @@
 #define BOXES_HPP   
 
 #include <cppurses/cppurses.hpp>
-#include <biji.hpp>
+//#include <biji.hpp>
 
 using namespace cppurses;
-using namespace biji;
+//using namespace biji;
 
 class address_box
   : public layout::Horizontal  
@@ -51,5 +51,20 @@ public:
 
     sig::Signal<void(std::string&)> fee_entered;
 }; 
+
+class confirm_box
+  : public layout::Horizontal
+{
+public:
+    confirm_box();
+
+    Text_display& confirm_text{make_child<Text_display>("Are you sure?")};
+
+    Fixed_width& confirm_separator{make_child<Fixed_width>(1)};
+
+    Push_button& yes_button{make_child<Push_button>("YES")};
+
+    Push_button& no_button{make_child<Push_button>("NO")};
+};
 
 #endif // BOXES_HPP

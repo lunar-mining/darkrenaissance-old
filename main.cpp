@@ -5,9 +5,9 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 #include <cppurses/cppurses.hpp>
-#include <biji.hpp>
+//#include <biji.hpp>
 
-using namespace biji;
+//using namespace biji;
 
 void setup_logger()
 {
@@ -35,7 +35,7 @@ int main()
     System sys;
     wallet_gui gui;
     System::set_initial_focus(&gui.wallet_menu); 
-
+    
     auto& esc_short = Shortcuts::add_shortcut(Key::q);
     esc_short.connect([&sys, &gui]
     {

@@ -4,11 +4,11 @@
 #include <functional>
 #include <vector>
 
-#include <biji.hpp>   
+//#include <biji.hpp>   
 #include <signals/slot.hpp>
 #include <cppurses/cppurses.hpp>
 
-using namespace biji;
+//using namespace biji;
 
 namespace cppurses {
 class Glyph_string;
@@ -53,13 +53,12 @@ class Dark_menu
 
     Fixed_height& line_break{this->make_child<Fixed_height>(1)};
 
-   protected:
-    bool key_press_event(const Key::State& keyboard) override;
+    bool key_press_event(const Key::State& keyboard);
 
-    bool mouse_press_event(const Mouse::State& mouse) override;
+    bool mouse_press_event(const Mouse::State& mouse);
 
     bool mouse_press_event_filter(Widget& /* receiver */,
-                                  const Mouse::State& mouse) override;
+                                  const Mouse::State& mouse);
 
    private:
     struct Dark_menu_item {

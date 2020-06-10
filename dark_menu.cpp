@@ -3,24 +3,25 @@
 #include <iterator>
 #include <string>
 #include <utility>
+#include <spdlog/spdlog.h>
 
-#include <biji.hpp>   
+//#include <biji.hpp>   
 #include <signals/signals.hpp>
 #include <cppurses/cppurses.hpp>
 
 #include "dark_menu.hpp"
 
-using namespace biji;
+//using namespace biji;
 namespace cppurses {
 
 Dark_menu::Dark_menu(Glyph_string title_text)
     : title{this->make_child<Label>(std::move(title_text))}
 {
-    focus_policy = Focus_policy::Strong;
+    focus_policy = Focus_policy::Direct;
     title.set_alignment(Alignment::Center);
     hide_line_break();
     hide_title();
-   // Dark_menu_item.brush.set_foreground(Color::Blue);
+    set_name("dark_menu");
 }
 
 sig::Signal<void()>& Dark_menu::append_item(Glyph_string label)
@@ -137,6 +138,7 @@ void Dark_menu::enable(bool enable, bool post_child_polished_event)
 
 bool Dark_menu::key_press_event(const Key::State& keyboard)
 {
+    spdlog::debug("Dark menu key press called");
     if (keyboard.key == Key::Arrow_right || keyboard.key == Key::l)
     {
         select_down();

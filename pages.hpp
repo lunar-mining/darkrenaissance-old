@@ -2,11 +2,11 @@
 #define DARK_PAGES_HPP
 
 #include <cppurses/cppurses.hpp>
-#include <biji.hpp>   
+//#include <biji.hpp>   
 #include "send_widget.hpp"
 
 using namespace cppurses;
-using namespace biji;
+//using namespace biji;
 
 class landing_page
   : public layout::Horizontal
@@ -28,7 +28,9 @@ class send_page
 public:
     send_page();
 
-    Send_widget& send_function{make_child<Send_widget>()};    
+    Send_stack& send_widget{make_child<Send_stack>()};    
+
+    bool key_press_event(const Key::State& keyboard);
 };
 
 class receive_page

@@ -3,11 +3,11 @@
 
 #include "pages.hpp"
 #include <cppurses/cppurses.hpp>
-#include <biji.hpp>     
+//#include <biji.hpp>     
 
 #include "dark_menu_stack.hpp"
 
-using namespace biji;
+//using namespace biji;
 
 class wallet_gui
   : public layout::Vertical

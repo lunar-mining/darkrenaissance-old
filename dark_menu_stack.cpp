@@ -5,7 +5,7 @@
 
 #include "dark_menu_stack.hpp"
 
-using namespace biji;
+//using namespace biji;
 
 namespace {
 const std::size_t menu_index{0u};
@@ -16,6 +16,7 @@ namespace cppurses {
 dark_menu_stack::dark_menu_stack(Glyph_string title)
     : d_menu{this->Stack::make_page<Dark_menu>(std::move(title))}
 {
+    this->Stack::give_focus_on_change(true);
     this->Stack::set_active_page(menu_index);
     this->focus_policy = Focus_policy::Direct;
 }
