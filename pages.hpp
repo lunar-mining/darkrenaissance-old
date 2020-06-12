@@ -3,7 +3,7 @@
 
 #include <cppurses/cppurses.hpp>
 //#include <biji.hpp>   
-#include "send_widget.hpp"
+#include "send_stack.hpp"
 
 using namespace cppurses;
 //using namespace biji;
@@ -31,6 +31,18 @@ public:
     Send_stack& send_widget{make_child<Send_stack>()};    
 
     bool key_press_event(const Key::State& keyboard);
+
+    //void set_selected_attribute(const Attribute& attr);
+
+    //void select_down(std::size_t n = 1);
+
+    //std::size_t selected_index_{0};
+
+    //void select_item(std::size_t index);
+private:
+
+    //Attribute selected_attr_{Attribute::Inverse};
+
 };
 
 class receive_page

@@ -5,7 +5,7 @@
 //#include <biji.hpp>   
 #include <spdlog/spdlog.h>
 
-#include "send_widget.hpp"
+#include "send_stack.hpp"
 
 using namespace cppurses;
 //using namespace biji;
@@ -13,15 +13,23 @@ using namespace cppurses;
 namespace {
 const std::size_t front_page{0};
 const std::size_t confirm_page{1};
+const std::size_t error_page{2};
+const std::size_t sending_page{3};
 }    
 
-// need another popup_page that flags if entry data fails tests
+// need another confirm_popup that flags if entry data fails tests
 // ENTER press for send
 // inverse attributes on focus
 
 Send_stack::Send_stack()
-  : popup{make_page<popup_page>(*this)}
+  : confirm{make_page<confirm_popup>(*this)},
+    error{make_page<error_popup>(*this)},
+    sending{make_page<sending_popup>(*this)}
 {
+    set_active_page(front_page);
+    set_name("send stack");
+    give_focus_on_change(true);
+
     send_menu.focus_policy = Focus_policy::Direct;
     send_menu.set_name("send_menu");
 
@@ -36,22 +44,18 @@ Send_stack::Send_stack()
 
     enter_button.set_name("button box");
     enter_button.focus_policy = Focus_policy::Direct;
+    enter_button.brush.set_background(Color::Black);
+    enter_button.brush.set_foreground(Color::Blue);  
+    enter_button.border.enable();
+    enter_button.height_policy.expanding(3);
 
-    set_active_page(front_page);
-    set_name("send stack");
-
-    give_focus_on_change(true);
-    
+    // focus debugger
     if (Focus::focus_widget())
         spdlog::debug("hhh focus is: {}", Focus::focus_widget()->name());
     else
         spdlog::debug("hhh none");
  
-    enter_button.brush.set_background(Color::Black);
-    enter_button.brush.set_foreground(Color::Blue);  
-    enter_button.border.enable();
-    enter_button.height_policy.expanding(3);
-    
+    // focus check on click
     enter_button.clicked.connect(
     [this]
     {
@@ -60,29 +64,31 @@ Send_stack::Send_stack()
     else
         spdlog::debug("none");
         set_active_page(confirm_page);
-        popup.execute();
+        confirm.execute();
     });
 };                                     
 
-popup_page::popup_page(Send_stack& send)
+confirm_popup::confirm_popup(Send_stack& send)
   : send_w(send)
 {
     set_name("popup page");
     focus_policy = Focus_policy::Direct;
 
-   // input_echo.border.enable();
-  //  input_echo.set_alignment(Alignment::Center);
-
+    input_echo.border.enable();
     input_echo.height_policy.expanding(7);
-
     input_echo.width_policy.expanding(35);
 
- //   no_button.clicked.connect(
- //   [this]()
- //   {
- //  //   wallet_menu.goto_menu;
- //   });
+    buttons.no_button.clicked.connect(
+    [this]()
+    {
+        send_w.set_active_page(front_page);
+    });
 
+    buttons.yes_button.clicked.connect(
+    [this]()
+    {
+        send_w.set_active_page(sending_page);
+    });
  //   no_button.border.enable();
  //   no_button.height_policy.expanding(4);
 
@@ -97,23 +103,51 @@ popup_page::popup_page(Send_stack& send)
  //   yes_button.height_policy.expanding(4);
 }
 
-void popup_page::execute()
+void confirm_popup::execute()
 {
-    Glyph_string input_data = "You entered:" +
-        send_w.enter_address.address_input.contents().str() +
-        send_w.enter_fee.fee_input.contents().str() +
+    Glyph_string input_data = "You entered:\n" +
+        send_w.enter_address.address_input.contents().str() + "\n" +
+        send_w.enter_fee.fee_input.contents().str() + "\n" +
         send_w.enter_amount.amount_input.contents().str();
 
     input_echo.set_contents(input_data);
 }
 
-void popup_page::build_transaction()
+
+bool confirm_popup::key_press_event(const Key::State& keyboard) {
+    spdlog::debug("Key press function called");
+    if (keyboard.key == Key::Arrow_left) {
+        spdlog::debug("Left arrow pushed");
+    } else if (keyboard.key == Key::Arrow_right) {
+        spdlog::debug("Right arrow pushed");
+    } else if (keyboard.key == Key::Arrow_up) {
+        spdlog::debug("Up arrow pushed");
+    } else if (keyboard.key == Key::Arrow_down) {
+        spdlog::debug("Down arrow pushed");
+    } else if (keyboard.key == Key::Enter) {
+        spdlog::debug("Enter pushed");
+        send_w.set_active_page(3);
+    }
+    return Widget::key_press_event(keyboard);
+}
+
+
+void confirm_popup::build_transaction()
 {
     // builds
 }
 
-void popup_page::broadcast()
+void confirm_popup::broadcast()
 {
     // broadcasts
 }
 
+error_popup::error_popup(Send_stack& send)
+  : send_w(send)
+{
+}
+
+sending_popup::sending_popup(Send_stack& send)
+  : send_w(send)
+{
+}

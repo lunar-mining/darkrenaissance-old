@@ -28,19 +28,20 @@ address_box::address_box()
 
 amount_box::amount_box()
 {
-    height_policy.fixed(3);
     set_name("amount box");
     amount_input.set_name("amount input box");
     focus_policy = Focus_policy::Direct;
 
-    amount_prompt.width_policy.fixed(13);
+    height_policy.fixed(3);
+
+    amount_prompt.width_policy.fixed(14);
     amount_prompt.brush.set_foreground(Color::Blue);
 
     amount_separator.width_policy.fixed(1);
     amount_separator.wallpaper = L'⏵';
 
     amount_input.width_policy.fixed(35);
-    amount_input.brush.set_foreground(Color::Black);
+    amount_input.brush.set_foreground(Color::Blue);
     amount_input.set_ghost_color(Color::Dark_gray);
 
     border.enable();
@@ -48,20 +49,20 @@ amount_box::amount_box()
 
 fee_box::fee_box()
 {
-    fee_input.set_name("fee input box");
     set_name("fee box");
+    fee_input.set_name("fee input box");
     focus_policy = Focus_policy::Direct;
 
     height_policy.fixed(3);
 
-    fee_prompt.width_policy.fixed(10);
+    fee_prompt.width_policy.fixed(14);
     fee_prompt.brush.set_foreground(Color::Blue);
 
     fee_separator.width_policy.fixed(1);
     fee_separator.wallpaper = L'⏵';
     
     fee_input.width_policy.fixed(35);
-    fee_input.brush.set_foreground(Color::Black);
+    fee_input.brush.set_foreground(Color::Blue);
     fee_input.set_ghost_color(Color::Dark_gray);
 
     border.enable();
@@ -81,10 +82,27 @@ confirm_box::confirm_box()
     confirm_separator.wallpaper =  L'⏵';
 
     yes_button.width_policy.fixed(4);
-    no_button.width_policy.fixed(4);
-
     yes_button.brush.set_foreground(Color::Blue);
+
+    no_button.width_policy.fixed(4);
     no_button.brush.set_foreground(Color::Blue);
+
+    //no_button.clicked.connect(
+    //[this]()
+    //{
+    //  //set_active_page(front_page);
+    //});
+
+    //no_button.border.enable();
+    //no_button.height_policy.expanding(4);
+
+    //yes_button.clicked.connect(
+    //[this]()
+    //{
+    //   // build_transaction();
+    //    //broadcast();
+    //});
+    // 
 
     border.enable();
 }

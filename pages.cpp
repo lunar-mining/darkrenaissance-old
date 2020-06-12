@@ -17,7 +17,7 @@ landing_page::landing_page()
 send_page::send_page()
 {
    // Focus::set_focus_to(*this);
-    focus_policy = Focus_policy::Direct;
+    focus_policy = Focus_policy::Strong;
     set_name("send page");
 }
 
@@ -55,7 +55,18 @@ bool send_page::key_press_event(const Key::State& keyboard) {
         spdlog::debug("Up arrow pushed");
     } else if (keyboard.key == Key::Arrow_down) {
         spdlog::debug("Down arrow pushed");
+    } else if (keyboard.key == Key::Enter) {
+        spdlog::debug("Enter pushed");
+        send_widget.set_active_page(1);
     }
     return Widget::key_press_event(keyboard);
 }
 
+/* void send_page::set_selected_attribute(const Attribute& attr)
+{
+    auto& selected_btn = items_[selected_index_].button.get();
+    selected_btn.brush.remove_attributes(selected_attr_);
+    selected_attr_ = attr;
+    selected_btn.brush.add_attributes(selected_attr_);
+    selected_btn.update();
+}*/

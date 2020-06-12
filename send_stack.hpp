@@ -1,5 +1,5 @@
-#ifndef DARK_SEND_WIDGET_HPP
-#define DARK_SEND_WIDGET_HPP 
+#ifndef DARK_SEND_STACK_HPP
+#define DARK_SEND_STACK_HPP 
 
 #include <fstream>
 #include <iostream>
@@ -15,7 +15,9 @@ using namespace cppurses;
 
 // tab up and down through stack
 
-class popup_page;
+class confirm_popup;
+class error_popup;
+class sending_popup;
 
 class Send_stack
   : public layout::Stack
@@ -34,30 +36,28 @@ public:
 
     Push_button& enter_button{send_menu.make_child<Push_button>("SEND")};    
 
-    popup_page& popup;
+    confirm_popup& confirm;
 
-    error_page& error;
+    error_popup& error;
+
+    sending_popup& sending;
 
     //Emitted on Enter Key press, sends along the current contents.  
     sig::Signal<void(const std::string&)> send_data;
 };
 
-class popup_page
+class confirm_popup
   : public layout::Vertical
 {
 public:
-    popup_page(Send_stack& send);
+    confirm_popup(Send_stack& send);
     
     Textbox& input_echo{make_child<Textbox>()};
 
     confirm_box& buttons{make_child<confirm_box>()};
+
+    bool key_press_event(const Key::State& keyboard);
     
-   // bool key_press_event(const Key::State& keyboard) override;
-
- //   void select_up(std::size_t n = 1);
-
-  //  void select_down(std::size_t n = 1);
-
     void execute();
 
 private:
@@ -66,14 +66,26 @@ private:
     Send_stack& send_w;
 };   
 
-class error_page
+class error_popup
   : public layout::Vertical
 {
 public:
-    error_page(Send_stack& send);
+    error_popup(Send_stack& send);
 
 private:
     Send_stack& send_w;
+};
+
+class sending_popup
+  : public layout::Vertical
+{
+public:
+    sending_popup(Send_stack& send);
+
+private:
+    Send_stack& send_w;
+
+    Status_bar& send_status{make_child<Status_bar>("Sending transaction...")};
 };
 
 // get address, amount, fee 
@@ -82,4 +94,4 @@ private:
 // are you sure?
 // send / broadcast
 
-#endif  // DARK_SEND_WIDGET_HPP           
+#endif  // DARK_SEND_STACK_HPP           

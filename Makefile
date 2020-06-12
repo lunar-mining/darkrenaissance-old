@@ -1,4 +1,4 @@
-default: pages.o gui.o main.o send_widget.o boxes.o dark_menu.o dark_menu_stack.o
+default: pages.o gui.o main.o send_stack.o boxes.o dark_menu.o dark_menu_stack.o
 	g++ *.o -lcppurses -lncursesw -pthread
 
 # $(shell pkg-config --libs biji) 
@@ -18,8 +18,8 @@ gui.o: gui.hpp gui.cpp
 
 # $(shell pkg-config --cflags biji)
 
-send_widget.o: send_widget.hpp send_widget.cpp 
-	g++ -c send_widget.cpp
+send_stack.o: send_stack.hpp send_stack.cpp 
+	g++ -c send_stack.cpp
 
 # $(shell pkg-config --cflags biji) 
 
