@@ -28,7 +28,7 @@ class amount_box
 public:
     amount_box();
 
-    Push_button& amount_prompt{make_child<Push_button>("Enter amount")};
+    Push_button& amount_prompt{make_child<Push_button>("Enter amount  ")};
 
     Fixed_width& amount_separator{make_child<Fixed_width>(1)};
 
@@ -43,7 +43,7 @@ class fee_box
 public:
     fee_box();
 
-    Push_button& fee_prompt{make_child<Push_button>("Enter fee")};
+    Push_button& fee_prompt{make_child<Push_button>("Enter fee    ")};
 
     Fixed_width& fee_separator{make_child<Fixed_width>(1)};
 

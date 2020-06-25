@@ -58,15 +58,8 @@ bool send_page::key_press_event(const Key::State& keyboard) {
     } else if (keyboard.key == Key::Enter) {
         spdlog::debug("Enter pushed");
         send_widget.set_active_page(1);
+        send_widget.confirm.execute();
     }
     return Widget::key_press_event(keyboard);
 }
 
-/* void send_page::set_selected_attribute(const Attribute& attr)
-{
-    auto& selected_btn = items_[selected_index_].button.get();
-    selected_btn.brush.remove_attributes(selected_attr_);
-    selected_attr_ = attr;
-    selected_btn.brush.add_attributes(selected_attr_);
-    selected_btn.update();
-}*/

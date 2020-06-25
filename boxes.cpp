@@ -87,23 +87,6 @@ confirm_box::confirm_box()
     no_button.width_policy.fixed(4);
     no_button.brush.set_foreground(Color::Blue);
 
-    //no_button.clicked.connect(
-    //[this]()
-    //{
-    //  //set_active_page(front_page);
-    //});
-
-    //no_button.border.enable();
-    //no_button.height_policy.expanding(4);
-
-    //yes_button.clicked.connect(
-    //[this]()
-    //{
-    //   // build_transaction();
-    //    //broadcast();
-    //});
-    // 
-
     border.enable();
 }
 

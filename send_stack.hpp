@@ -44,6 +44,16 @@ public:
 
     //Emitted on Enter Key press, sends along the current contents.  
     sig::Signal<void(const std::string&)> send_data;
+
+    //void set_selected_attribute(const Attribute& attr);
+
+ //   bool key_press_event(const Key::State& keyboard);
+
+    //std::size_t selected_index_{0};
+
+private:
+
+   // Attribute selected_attr_{Attribute::Inverse};
 };
 
 class confirm_popup
