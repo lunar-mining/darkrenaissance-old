@@ -163,14 +163,14 @@ sending_popup::sending_popup(Send_stack& send)
 {
 }
 
-/*void Send_stack::set_selected_attribute(const Attribute& attr)
+void Send_stack::set_selected_attribute(const Attribute& attr)
 {
     auto& selected_btn = items_[selected_index_].button.get();
     selected_btn.brush.remove_attributes(selected_attr_);
     selected_attr_ = attr;
     selected_btn.brush.add_attributes(selected_attr_);
     selected_btn.update(); 
-}*/
+}
 
 /*void Dark_menu::select_up(std::size_t n)
 {

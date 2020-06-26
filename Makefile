@@ -33,8 +33,8 @@ dark_menu.o: dark_menu.hpp dark_menu.cpp
 
 # $(shell pkg-config --cflags biji)
 
-dark_menu_stack.o: dark_menu_stack.hpp dark_menu_stack.cpp
-	g++ -c dark_menu_stack.cpp
+#dark_menu_stack.o: dark_menu_stack.hpp dark_menu_stack.cpp
+#	g++ -c dark_menu_stack.cpp
 
 # $(shell pkg-config --cflags biji)
 
