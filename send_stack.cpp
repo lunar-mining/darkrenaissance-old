@@ -10,18 +10,15 @@
 using namespace cppurses;
 //using namespace biji;
 
-namespace {
 const std::size_t front_page{0};
 const std::size_t confirm_page{1};
 const std::size_t error_page{2};
 const std::size_t sending_page{3};
-}    
 
-// need another confirm_popup that flags if entry data fails tests
-// ENTER press for send
-// inverse attributes on focus
+// TODO: need another confirm_popup that flags if entry data fails tests
+// TODO: inverse attributes on focus
 
-Send_stack::Send_stack()
+send_stack::send_stack()
   : confirm{make_page<confirm_popup>(*this)},
     error{make_page<error_popup>(*this)},
     sending{make_page<sending_popup>(*this)}
@@ -31,7 +28,7 @@ Send_stack::Send_stack()
     give_focus_on_change(true);
 
     send_menu.focus_policy = Focus_policy::Direct;
-    send_menu.set_name("send_menu");
+    send_menu.set_name("menu layout");
 
     enter_address.set_name("address box");
     enter_address.focus_policy = Focus_policy::Direct;
@@ -51,10 +48,10 @@ Send_stack::Send_stack()
 
 
     // focus debugger
-   /* if (Focus::focus_widget())
-        spdlog::debug("hhh focus is: {}", Focus::focus_widget()->name());
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
     else
-        spdlog::debug("hhh none"); */
+        spdlog::debug("None"); 
  
     // focus check on click
     /*enter_button.clicked.connect(
@@ -71,7 +68,8 @@ Send_stack::Send_stack()
         
 };                                     
 
-/*bool Send_stack::key_press_event(const Key::State& keyboard)
+
+/*bool send_stack::key_press_event(const Key::State& keyboard)
 {
     spdlog::debug("Key press function called");
     if (keyboard.key == Key::Arrow_left) {
@@ -91,10 +89,15 @@ Send_stack::Send_stack()
     return Widget::key_press_event(keyboard); 
 };*/
 
-confirm_popup::confirm_popup(Send_stack& send)
+confirm_popup::confirm_popup(send_stack& send)
   : send_w(send)
 {
-    set_name("popup page");
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
+
+    set_name("confirm popup");
     focus_policy = Focus_policy::Direct;
 
     input_echo.border.enable();
@@ -114,6 +117,7 @@ confirm_popup::confirm_popup(Send_stack& send)
     });
 }
 
+// confirm page key presses happen here
 bool confirm_popup::key_press_event(const Key::State& keyboard) {
     spdlog::debug("Key press function called");
     if (keyboard.key == Key::Arrow_left) {
@@ -135,6 +139,11 @@ bool confirm_popup::key_press_event(const Key::State& keyboard) {
 
 void confirm_popup::execute()
 {
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
+
     Glyph_string input_data = "You entered:\n" +
         send_w.enter_address.address_input.contents().str() + "\n" +
         send_w.enter_fee.fee_input.contents().str() + "\n" +
@@ -153,37 +162,34 @@ void confirm_popup::broadcast()
     // broadcasts
 }
 
-error_popup::error_popup(Send_stack& send)
+error_popup::error_popup(send_stack& send)
   : send_w(send)
 {
 }
 
-sending_popup::sending_popup(Send_stack& send)
+sending_popup::sending_popup(send_stack& send)
   : send_w(send)
 {
+
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
 }
 
-void Send_stack::set_selected_attribute(const Attribute& attr)
-{
-    auto& selected_btn = items_[selected_index_].button.get();
-    selected_btn.brush.remove_attributes(selected_attr_);
-    selected_attr_ = attr;
-    selected_btn.brush.add_attributes(selected_attr_);
-    selected_btn.update(); 
-}
-
-/*void Dark_menu::select_up(std::size_t n)
+/*void send_stack::select_up(std::size_t n)
 {
     const auto new_index = selected_index_ > n ? selected_index_ - n : 0;
     this->select_item(new_index);
 }
 
-void Dark_menu::select_down(std::size_t n)
+void send_stack::select_down(std::size_t n)
 {
     this->select_item(selected_index_ + n);
 }
 
-void Dark_menu::select_item(std::size_t index)
+//TODO: add debugs when buttons are called
+void send_stack::select_item(std::size_t index)
 {
     if (items_.empty())
     {
@@ -200,12 +206,54 @@ void Dark_menu::select_item(std::size_t index)
     current_btn.update();
 }
 
-void Dark_menu::set_selected_attribute(const Attribute& attr)
+void send_stack::set_selected_attribute(const Attribute& attr)
 {
     auto& selected_btn = items_[selected_index_].button.get();
     selected_btn.brush.remove_attributes(selected_attr_);
     selected_attr_ = attr;
     selected_btn.brush.add_attributes(selected_attr_);
     selected_btn.update();
-} */
+} 
 
+sig::Slot<void(std::size_t)> select_up(send_stack& m)
+{
+    sig::Slot<void(std::size_t)> slot{[&m](auto n) { m.select_up(n); }};
+    slot.track(m.destroyed);
+    return slot;
+}
+
+sig::Slot<void()> select_up(send_stack& m, std::size_t n)
+{
+    sig::Slot<void()> slot{[&m, n] { m.select_up(n); }};
+    slot.track(m.destroyed);
+    return slot;
+}
+
+sig::Slot<void(std::size_t)> select_down(send_stack& m)
+{
+    sig::Slot<void(std::size_t)> slot{[&m](auto n) { m.select_down(n); }};
+    slot.track(m.destroyed);
+    return slot;
+}
+
+sig::Slot<void()> select_down(send_stack& m, std::size_t n)
+{
+    sig::Slot<void()> slot{[&m, n] { m.select_down(n); }};
+    slot.track(m.destroyed);
+    return slot;
+}
+
+sig::Slot<void(std::size_t)> select_item(send_stack& m)
+{
+    sig::Slot<void(std::size_t)> slot{
+        [&m](auto index) { m.select_item(index); }};
+    slot.track(m.destroyed);
+    return slot;
+}
+
+sig::Slot<void()> select_item(send_stack& m, std::size_t index)
+{
+    sig::Slot<void()> slot{[&m, index] { m.select_item(index); }};
+    slot.track(m.destroyed);
+    return slot;
+}*/

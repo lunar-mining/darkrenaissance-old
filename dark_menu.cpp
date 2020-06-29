@@ -33,8 +33,10 @@ sig::Signal<void()>& Dark_menu::insert_item(Glyph_string label, std::size_t inde
 {
     auto button_ptr = std::make_unique<Push_button>(std::move(label));
     Push_button& new_button = *button_ptr;
+    new_button.set_name("new button");
     children.insert(std::move(button_ptr), index + 2);
     items_.emplace(std::begin(items_) + index, new_button);
+    //items_.set_name("menu items vector");
     new_button.install_event_filter(*this);
     new_button.height_policy.fixed(1);
 
@@ -48,6 +50,7 @@ sig::Signal<void()>& Dark_menu::insert_item(Glyph_string label, std::size_t inde
         this->send_selected_signal();
     });
     return items_[index].selected;
+
 }
 
 void Dark_menu::remove_item(std::size_t index)
@@ -66,28 +69,47 @@ void Dark_menu::remove_item(std::size_t index)
 
 void Dark_menu::select_up(std::size_t n)
 {
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     const auto new_index = selected_index_ > n ? selected_index_ - n : 0;
     this->select_item(new_index);
+    spdlog::debug("select up function called");
 }
 
 void Dark_menu::select_down(std::size_t n)
 {
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     this->select_item(selected_index_ + n);
+    spdlog::debug("select down function called");
 }
 
 void Dark_menu::select_item(std::size_t index)
 {
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
+
     if (items_.empty())
     {
         return;
+        spdlog::debug("vector is empty");
     }
+
     auto& previous_btn = items_[selected_index_].button.get();
+    previous_btn.set_name("previous button");
     previous_btn.brush.remove_attributes(selected_attr_);
     previous_btn.update();
 
     selected_index_ = index >= items_.size() ? items_.size() - 1 : index;
 
     auto& current_btn = items_[selected_index_].button.get();
+    current_btn.set_name("current button");
     current_btn.brush.add_attributes(selected_attr_);
     current_btn.update();
 }
@@ -95,6 +117,7 @@ void Dark_menu::select_item(std::size_t index)
 void Dark_menu::set_selected_attribute(const Attribute& attr)
 {
     auto& selected_btn = items_[selected_index_].button.get();
+    selected_btn.set_name("selected button");
     selected_btn.brush.remove_attributes(selected_attr_);
     selected_attr_ = attr;
     selected_btn.brush.add_attributes(selected_attr_);
@@ -138,6 +161,10 @@ void Dark_menu::enable(bool enable, bool post_child_polished_event)
 
 bool Dark_menu::key_press_event(const Key::State& keyboard)
 {
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     spdlog::debug("Dark menu key press called");
     if (keyboard.key == Key::Arrow_right || keyboard.key == Key::l)
     {
@@ -147,6 +174,7 @@ bool Dark_menu::key_press_event(const Key::State& keyboard)
         select_up();
     } else if (keyboard.key == Key::Enter)
     {
+        spdlog::debug("Enter pushed");
         send_selected_signal();
     }
     return true;
@@ -185,6 +213,11 @@ void Dark_menu::send_selected_signal()
     if (!items_.empty())
     {
         items_[selected_index_].selected();
+        spdlog::debug("Signal sent");
+    if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     }
 }
 

@@ -7,8 +7,9 @@
 #include <cppurses/cppurses.hpp>
 //#include <biji.hpp>   
 #include <spdlog/spdlog.h>
-
+#include <array>
 #include "boxes.hpp"
+
 
 using namespace cppurses;
 //using namespace biji;
@@ -19,12 +20,12 @@ class confirm_popup;
 class error_popup;
 class sending_popup;
 
-class Send_stack
+class send_stack
   : public layout::Stack
 {
 public:
 
-    Send_stack();
+    send_stack();
 
     layout::Vertical& send_menu{make_child<layout::Vertical>()};
 
@@ -42,25 +43,57 @@ public:
 
     sending_popup& sending;
 
+    void select_item(std::size_t index);
+
+    void select_up(std::size_t n = 1);
+
+    void select_down(std::size_t n = 1);
+
+    void set_selected_attribute(const Attribute& attr);
+
     //Emitted on Enter Key press, sends along the current contents.  
+
     sig::Signal<void(const std::string&)> send_data;
-
-    //void set_selected_attribute(const Attribute& attr);
-
- //   bool key_press_event(const Key::State& keyboard);
-
-    //std::size_t selected_index_{0};
 
 private:
 
-   // Attribute selected_attr_{Attribute::Inverse};
+    /*std::array<Push_button, 4> button_array{address_box.address_prompt, 
+                                        amount_box.amount_prompt,
+                                        fee_box.fee_prompt,
+                                        enter_button};*/
+
+    struct send_stack_item
+    {
+        //explicit send_stack_item(Push_button& ref) : button{ref} {};
+       // std::reference_wrapper<Push_button> button;
+        address_box& enter_address;
+        amount_box& enter_amount;
+        fee_box& enter_fee;
+        Push_button& enter_button;
+        sig::Signal<void()> selected;
+    };
+
+    std::vector<send_stack_item> items;
+    //std::size_t selected_index_{0};
+    //Attribute selected_attr_{Attribute::Inverse};
+
+    void send_selected_signal();
 };
+
+/*sig::Slot<void(std::size_t)> select_up(send_stack& m);
+sig::Slot<void()> select_up(send_stack& m, std::size_t n);
+
+sig::Slot<void(std::size_t)> select_down(send_stack& m);
+sig::Slot<void()> select_down(send_stack& m, std::size_t n);
+
+sig::Slot<void(std::size_t)> select_item(send_stack& m);
+sig::Slot<void()> select_item(send_stack& m, std::size_t index);*/
 
 class confirm_popup
   : public layout::Vertical
 {
 public:
-    confirm_popup(Send_stack& send);
+    confirm_popup(send_stack& send);
     
     Textbox& input_echo{make_child<Textbox>()};
 
@@ -73,27 +106,27 @@ public:
 private:
     void build_transaction();
     void broadcast();
-    Send_stack& send_w;
+    send_stack& send_w;
 };   
 
 class error_popup
   : public layout::Vertical
 {
 public:
-    error_popup(Send_stack& send);
+    error_popup(send_stack& send);
 
 private:
-    Send_stack& send_w;
+    send_stack& send_w;
 };
 
 class sending_popup
   : public layout::Vertical
 {
 public:
-    sending_popup(Send_stack& send);
+    sending_popup(send_stack& send);
 
 private:
-    Send_stack& send_w;
+    send_stack& send_w;
 
     Status_bar& send_status{make_child<Status_bar>("Sending transaction...")};
 };

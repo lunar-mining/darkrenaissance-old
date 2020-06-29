@@ -28,7 +28,7 @@ class send_page
 public:
     send_page();
 
-    Send_stack& send_widget{make_child<Send_stack>()};    
+    send_stack& send_widget{make_child<send_stack>()};    
 
     bool key_press_event(const Key::State& keyboard);
 
