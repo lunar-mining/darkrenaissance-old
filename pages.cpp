@@ -18,14 +18,8 @@ landing_page::landing_page()
 send_page::send_page()
 {
     spdlog::debug("send page constructor called");
-    Focus::set_focus_to(send_widget);
-    spdlog::debug("focus set to send widgets");
-   if (Focus::focus_widget())
-        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
-    else
-        spdlog::debug("None"); 
+    Focus::set_focus_to(send_widget.enter_address);
     focus_policy = Focus_policy::Strong;
-    spdlog::debug("Focus policy set to strong");
     set_name("send page");
     send_widget.set_name("send widget");
 }
@@ -70,9 +64,9 @@ bool send_page::key_press_event(const Key::State& keyboard) {
         spdlog::debug("Down arrow pushed");
     } else if (keyboard.key == Key::Enter) {
         spdlog::debug("Enter pushed");
-        send_widget.set_active_page(1);
+        //send_widget.set_active_page(0);
         spdlog::debug("confirm page set");
-        send_widget.confirm.execute();
+        //send_widget.confirm.execute();
     }
     return Widget::key_press_event(keyboard);
 }

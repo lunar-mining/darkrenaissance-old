@@ -27,15 +27,17 @@ public:
 
     send_stack();
 
-    layout::Vertical& send_menu{make_child<layout::Vertical>()};
+    //TODO: possibly refactor into one input per page
 
-    address_box& enter_address{send_menu.make_child<address_box>()};
+    //layout::Vertical& send_menu{make_child<layout::Vertical>()};
 
-    amount_box& enter_amount{send_menu.make_child<amount_box>()};
+    address_box& enter_address{make_child<address_box>()};
 
-    fee_box& enter_fee{send_menu.make_child<fee_box>()};
+    amount_box& enter_amount{make_child<amount_box>()};
 
-    Push_button& enter_button{send_menu.make_child<Push_button>("SEND")};    
+    fee_box& enter_fee{make_child<fee_box>()};
+
+   // Push_button& enter_button{make_child<Push_button>("SEND")};    
 
     confirm_popup& confirm;
 
@@ -43,13 +45,13 @@ public:
 
     sending_popup& sending;
 
-    void select_item(std::size_t index);
+   // void select_item(std::size_t index);
 
-    void select_up(std::size_t n = 1);
+   // void select_up(std::size_t n = 1);
 
-    void select_down(std::size_t n = 1);
+   // void select_down(std::size_t n = 1);
 
-    void set_selected_attribute(const Attribute& attr);
+   // void set_selected_attribute(const Attribute& attr);
 
     //Emitted on Enter Key press, sends along the current contents.  
 
@@ -62,7 +64,7 @@ private:
                                         fee_box.fee_prompt,
                                         enter_button};*/
 
-    struct send_stack_item
+    /*struct send_stack_item
     {
         //explicit send_stack_item(Push_button& ref) : button{ref} {};
        // std::reference_wrapper<Push_button> button;
@@ -77,7 +79,7 @@ private:
     //std::size_t selected_index_{0};
     //Attribute selected_attr_{Attribute::Inverse};
 
-    void send_selected_signal();
+    void send_selected_signal();*/
 };
 
 /*sig::Slot<void(std::size_t)> select_up(send_stack& m);

@@ -10,10 +10,12 @@
 using namespace cppurses;
 //using namespace biji;
 
-const std::size_t front_page{0};
-const std::size_t confirm_page{1};
-const std::size_t error_page{2};
-const std::size_t sending_page{3};
+const std::size_t address_input{0};
+const std::size_t amount_input{1};
+const std::size_t fee_input{2};
+const std::size_t confirm_page{3};
+const std::size_t error_page{4};
+const std::size_t sending_page{5};
 
 // TODO: need another confirm_popup that flags if entry data fails tests
 // TODO: inverse attributes on focus
@@ -23,15 +25,34 @@ send_stack::send_stack()
     error{make_page<error_popup>(*this)},
     sending{make_page<sending_popup>(*this)}
 {
-    set_active_page(front_page);
+    Focus::tab_press();
+    set_active_page(address_input);
     set_name("send stack");
     give_focus_on_change(true);
 
-    send_menu.focus_policy = Focus_policy::Direct;
-    send_menu.set_name("menu layout");
+   // send_menu.focus_policy = Focus_policy::Direct;
+    //send_menu.set_name("menu layout");
 
     enter_address.set_name("address box");
     enter_address.focus_policy = Focus_policy::Direct;
+
+    enter_address.address_ok.clicked.connect(
+    [this]()
+    {
+        set_active_page(amount_input);
+    });
+
+    enter_amount.amount_ok.clicked.connect(
+    [this]()
+    {
+        set_active_page(fee_input);
+    });
+
+    enter_fee.fee_ok.clicked.connect(
+    [this]()
+    {
+        set_active_page(confirm_page);
+    });
 
     enter_amount.set_name("amount box");
     enter_amount.focus_policy = Focus_policy::Direct;
@@ -39,15 +60,32 @@ send_stack::send_stack()
     enter_fee.set_name("fee box");
     enter_fee.focus_policy = Focus_policy::Direct;
 
-    enter_button.set_name("button box");
+   /* enter_button.set_name("button box");
     enter_button.focus_policy = Focus_policy::Direct;
     enter_button.brush.set_background(Color::Black);
     enter_button.brush.set_foreground(Color::Blue);  
     enter_button.border.enable();
-    enter_button.height_policy.expanding(3);
+    enter_button.height_policy.expanding(3); */
 
+/*    enter_address.address_button.clicked.connect(
+    [this]()
+    {
+        set_active_page(amount_input);
+    });
 
+    enter_amount.amount_button.clicked.connect(
+    [this]()
+    {
+        set_active_page(fee_input);
+    });
+
+    enter_fee.fee_button.clicked.connect(
+    [this]()
+    {
+        set_active_page(confirm_page);
+    });*/
     // focus debugger
+
    if (Focus::focus_widget())
         spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
     else
@@ -107,13 +145,23 @@ confirm_popup::confirm_popup(send_stack& send)
     buttons.no_button.clicked.connect(
     [this]()
     {
-        send_w.set_active_page(front_page);
+        //send_w.set_active_page(front_page);
+        //Focus::set_focus_to(front_page);
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     });
 
     buttons.yes_button.clicked.connect(
     [this]()
     {
         send_w.set_active_page(sending_page);
+        //Focus::set_focus_to(front_page);
+   if (Focus::focus_widget())
+        spdlog::debug("Focus is: {}", Focus::focus_widget()->name());
+    else
+        spdlog::debug("None"); 
     });
 }
 
